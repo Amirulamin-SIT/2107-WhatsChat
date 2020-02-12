@@ -26,34 +26,33 @@ public class AddNewGroupGUI extends JFrame {
         constraints.gridy = 0;
         topPanel.add(onlineUsersLabel, constraints);
 
-        JTextArea onlineUsersTextArea = new JTextArea();
-        onlineUsersTextArea.setEditable(false);
+        JList onlineUsersList = new JList();
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 1;
-        topPanel.add(onlineUsersTextArea, constraints);
+        topPanel.add(onlineUsersList, constraints);
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 0));
         JButton addButton = new JButton("->");
         addButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+        });
         JButton removeButton = new JButton("<-");
         removeButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+        });
 
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
@@ -73,14 +72,13 @@ public class AddNewGroupGUI extends JFrame {
         constraints.gridy = 0;
         topPanel.add(memberLabel, constraints);
 
-        JTextArea memberTextArea = new JTextArea();
+        JList memberList = new JList();
         constraints.weighty = 0.9;
-        onlineUsersTextArea.setEditable(false);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 2;
         constraints.gridy = 1;
-        topPanel.add(memberTextArea, constraints);
+        topPanel.add(memberList, constraints);
 
         JPanel bottomPanel = new JPanel(new GridBagLayout());
 
@@ -100,13 +98,13 @@ public class AddNewGroupGUI extends JFrame {
 
         JButton createButton = new JButton("Create");
         createButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+        });
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 2;

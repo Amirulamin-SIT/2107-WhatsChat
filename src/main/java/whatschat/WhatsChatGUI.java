@@ -10,6 +10,7 @@ public class WhatsChatGUI extends JFrame {
     private JPanel contentPane;
     public static JFrame frame;
     public static DefaultListModel<String> onlineUserListModel = new DefaultListModel<>();
+    public static DefaultListModel<String> groupsListModel = new DefaultListModel<>();
 
     /**
      * Launch the application.
@@ -47,13 +48,12 @@ public class WhatsChatGUI extends JFrame {
         constraints.gridy = 0;
         topItemsPanel.add(groupsLabel, constraints);
 
-        JTextArea groupsTextArea = new JTextArea();
-        groupsTextArea.setEditable(false);
+        JList groupsList = new JList(groupsListModel);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 1;
         constraints.gridy = 1;
-        topItemsPanel.add(groupsTextArea, constraints);
+        topItemsPanel.add(groupsList, constraints);
 
         JPanel joinPanel = new JPanel(new GridLayout(0, 2));
         constraints.anchor = GridBagConstraints.NORTH;
@@ -196,13 +196,10 @@ public class WhatsChatGUI extends JFrame {
     }
 
     public static void updateGroup() {
-        JTextArea groupField = (JTextArea) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(3);
-        String groupString = "";
+        groupsListModel.clear();
         for (Group group : WhatsChat.groups.values()) {
-            groupString += (group.name + "\n");
+            groupsListModel.addElement(group.name);
         }
-        groupField.setText(groupString);
-
     }
 
     // public static void main(String[] args) {
