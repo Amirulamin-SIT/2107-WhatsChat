@@ -26,14 +26,13 @@ public class ManageGroupGUI extends JFrame  {
         constraints.gridy = 0;
         topPanel.add(onlineUsersLabel, constraints);
 
-        JTextArea onlineUsersTextArea = new JTextArea();
-        onlineUsersTextArea.setEditable(false);
+        JLabel onlineUsersList = new JLabel();
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 1;
-        topPanel.add(onlineUsersTextArea, constraints);
+        topPanel.add(onlineUsersList, constraints);
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 0));
         JButton addButton = new JButton("->");
@@ -73,14 +72,13 @@ public class ManageGroupGUI extends JFrame  {
         constraints.gridy = 0;
         topPanel.add(memberLabel, constraints);
 
-        JTextArea memberTextArea = new JTextArea();
+        JList memberList = new JList();
         constraints.weighty = 0.9;
-        onlineUsersTextArea.setEditable(false);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 2;
         constraints.gridy = 1;
-        topPanel.add(memberTextArea, constraints);
+        topPanel.add(memberList, constraints);
 
         JPanel bottomPanel = new JPanel(new GridBagLayout());
 
