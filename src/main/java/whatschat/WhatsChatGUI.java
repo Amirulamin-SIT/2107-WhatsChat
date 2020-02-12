@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class WhatsChatGUI extends JFrame {
-    private JPanel contentPane;
     public static JFrame frame;
     public static DefaultListModel<String> onlineUserListModel = new DefaultListModel<>();
     public static DefaultListModel<String> groupsListModel = new DefaultListModel<>();
@@ -129,8 +128,9 @@ public class WhatsChatGUI extends JFrame {
         JPanel sendMessagePanel = new JPanel(new GridBagLayout());
 
         JLabel sendMessageLabel = new JLabel("Message");
-        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.anchor = GridBagConstraints.NORTHEAST;
         constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0.1;
         constraints.weighty = 0.1;
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -139,6 +139,7 @@ public class WhatsChatGUI extends JFrame {
         JTextField messageTextView = new JTextField();
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.9;
         constraints.weighty = 0.9;
         constraints.gridx = 1;
         constraints.gridy = 0;
@@ -160,6 +161,7 @@ public class WhatsChatGUI extends JFrame {
         });
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.1;
         constraints.weighty = 0.1;
         constraints.gridx = 2;
         constraints.gridy = 0;
