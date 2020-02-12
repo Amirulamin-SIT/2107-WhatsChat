@@ -28,7 +28,7 @@ public class UserProfileGUI extends JFrame {
         constraints.gridy = 0;
         topPanel.add(userImageLabel, constraints);
         
-        String fileName = "images/cena.jpg";
+        String fileName = "images/default.jpg";
         ImageIcon icon = new ImageIcon(fileName);
         constraints.weighty =1;
         JLabel label = new JLabel(icon); 
