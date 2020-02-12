@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class WhatsChatGUI extends JFrame {
     private JPanel contentPane;
     public static JFrame frame;
+    public static DefaultListModel<String> onlineUserListModel = new DefaultListModel<>();
 
     /**
      * Launch the application.
@@ -32,18 +33,12 @@ public class WhatsChatGUI extends JFrame {
         constraints.gridy = 0;
         topItemsPanel.add(onlineUsersLabel, constraints);
 
-        JTextArea onlineUsersTextArea = new JTextArea();
-        // jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
-        // public void mouseClicked(java.awt.event.MouseEvent evt) {
-        // jTextArea1MouseClicked(evt);
-        // }
-        // });
-        onlineUsersTextArea.setEditable(false);
+        JList onlineUsersList = new JList(onlineUserListModel);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 1;
-        topItemsPanel.add(onlineUsersTextArea, constraints);
+        topItemsPanel.add(onlineUsersList, constraints);
 
         JLabel groupsLabel = new JLabel("Groups");
         constraints.anchor = GridBagConstraints.NORTHWEST;
@@ -171,7 +166,7 @@ public class WhatsChatGUI extends JFrame {
         mainPanel.add(textArea);
         mainPanel.add(sendMessagePanel);
 
-        frame.setSize(600, 500);
+        frame.setSize(600, 550);
         frame.setContentPane(mainPanel);
         frame.setLocationRelativeTo(null);
         updateGroup();
@@ -194,12 +189,10 @@ public class WhatsChatGUI extends JFrame {
     }
 
     public static void updateOnlineUsers() {
-        JTextArea onlineUsersField = (JTextArea) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(1);
-        String names = "";
+        onlineUserListModel.clear();
         for (String user : WhatsChat.ONLINE_USERS) {
-            names += (user + "\n");
+            onlineUserListModel.addElement(user);
         }
-        onlineUsersField.setText(names);
     }
 
     public static void updateGroup() {
