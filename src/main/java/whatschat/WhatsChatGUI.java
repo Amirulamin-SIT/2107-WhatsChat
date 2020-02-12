@@ -21,17 +21,21 @@ public class WhatsChatGUI extends JFrame {
         frame = new JFrame("ICT2103 - WhatsChat");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel mainPanel = new JPanel(new GridLayout(3, 0));
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints mainConstraints = new GridBagConstraints();
+        mainConstraints.weightx = 1;
+        mainConstraints.weighty = 1;
+        mainConstraints.insets = new Insets(10, 10, 10, 10);
 
         JPanel topItemsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.weightx = 1;
-        constraints.weighty = 1;
         constraints.insets = new Insets(10, 10, 10, 10);
 
         JLabel onlineUsersLabel = new JLabel("Users Online");
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.1;
         constraints.gridx = 0;
         constraints.gridy = 0;
         topItemsPanel.add(onlineUsersLabel, constraints);
@@ -39,6 +43,8 @@ public class WhatsChatGUI extends JFrame {
         JList onlineUsersList = new JList(onlineUserListModel);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.9;
         constraints.gridx = 0;
         constraints.gridy = 1;
         topItemsPanel.add(onlineUsersList, constraints);
@@ -46,6 +52,8 @@ public class WhatsChatGUI extends JFrame {
         JLabel groupsLabel = new JLabel("Groups");
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0.9;
+        constraints.weighty = 0.1;
         constraints.gridx = 1;
         constraints.gridy = 0;
         topItemsPanel.add(groupsLabel, constraints);
@@ -53,6 +61,8 @@ public class WhatsChatGUI extends JFrame {
         JList groupsList = new JList(groupsListModel);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.9;
         constraints.gridx = 1;
         constraints.gridy = 1;
         topItemsPanel.add(groupsList, constraints);
@@ -60,21 +70,14 @@ public class WhatsChatGUI extends JFrame {
         JPanel manageGroupPanel = new JPanel(new GridLayout(5, 0));
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.9;
+        constraints.weighty = 0.1;
         constraints.gridx = 2;
         constraints.gridy = 1;
 
         JButton joinButton = new JButton("Join");
         joinButton.setEnabled(false);
         joinButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-        JButton disconnectButton = new JButton("Disconnect");
-        disconnectButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,7 +115,6 @@ public class WhatsChatGUI extends JFrame {
             }
         });
         manageGroupPanel.add(joinButton);
-        manageGroupPanel.add(disconnectButton);
         manageGroupPanel.add(newGroupButton);
         manageGroupPanel.add(manageGroupButton);
         manageGroupPanel.add(leaveButton);
@@ -120,12 +122,13 @@ public class WhatsChatGUI extends JFrame {
 
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
-        // start of updated codes
+
         JPanel sendMessagePanel = new JPanel(new GridBagLayout());
 
         JLabel sendMessageLabel = new JLabel("Message");
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.NONE;
+        constraints.weighty = 0.1;
         constraints.gridx = 0;
         constraints.gridy = 0;
         sendMessagePanel.add(sendMessageLabel, constraints);
@@ -133,6 +136,7 @@ public class WhatsChatGUI extends JFrame {
         JTextField messageTextView = new JTextField();
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weighty = 0.9;
         constraints.gridx = 1;
         constraints.gridy = 0;
         sendMessagePanel.add(messageTextView, constraints);
@@ -153,16 +157,36 @@ public class WhatsChatGUI extends JFrame {
         });
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weighty = 0.1;
         constraints.gridx = 2;
         constraints.gridy = 0;
         sendMessagePanel.add(sendButton, constraints);
-        // end of updated code
 
-        mainPanel.add(topItemsPanel);
-        mainPanel.add(textArea);
-        mainPanel.add(sendMessagePanel);
+        mainConstraints.anchor = GridBagConstraints.NORTH;
+        mainConstraints.fill = GridBagConstraints.BOTH;
+        mainConstraints.weightx = 0.1;
+        mainConstraints.weighty = 0.1;
+        mainConstraints.gridx = 0;
+        mainConstraints.gridy = 0;
+        mainPanel.add(topItemsPanel, mainConstraints);
 
-        frame.setSize(600, 550);
+        mainConstraints.anchor = GridBagConstraints.NORTH;
+        mainConstraints.fill = GridBagConstraints.BOTH;
+        mainConstraints.weightx = 0.9;
+        mainConstraints.weighty = 0.9;
+        mainConstraints.gridx = 0;
+        mainConstraints.gridy = 1;
+        mainPanel.add(textArea, mainConstraints);
+
+        mainConstraints.anchor = GridBagConstraints.NORTH;
+        mainConstraints.fill = GridBagConstraints.BOTH;
+        mainConstraints.weightx = 0.1;
+        mainConstraints.weighty = 0.1;
+        mainConstraints.gridx = 0;
+        mainConstraints.gridy = 2;
+        mainPanel.add(sendMessagePanel, mainConstraints);
+
+        frame.setSize(600, 600);
         frame.setContentPane(mainPanel);
         frame.setLocationRelativeTo(null);
         updateGroup();
@@ -203,10 +227,4 @@ public class WhatsChatGUI extends JFrame {
             groupsListModel.addElement(group.name);
         }
     }
-
-    // public static void main(String[] args) {
-    //// new WhatsChat();
-    //// new AddNewGroupGUI();
-    // new UserProfile();
-    // }
 }
