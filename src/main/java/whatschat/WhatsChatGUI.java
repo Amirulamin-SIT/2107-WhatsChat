@@ -123,9 +123,9 @@ public class WhatsChatGUI extends JFrame {
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
 
-        JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        mainPanel.add(scrollPane);
-
+        JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        // mainPanel.add(scrollPane);
 
         JPanel sendMessagePanel = new JPanel(new GridBagLayout());
 
@@ -205,7 +205,8 @@ public class WhatsChatGUI extends JFrame {
     }
 
     public static void updateChat() {
-        JTextArea chat = (JTextArea) frame.getContentPane().getComponent(1);
+        JTextArea chat = ((JTextArea) ((JScrollPane) frame.getContentPane().getComponent(1)).getViewport()
+                .getComponent(0));
         ArrayList<String> messages = WhatsChat.groups.get(WhatsChat.activeGroupIp).messages;
         String msgs = "";
         for (String msg : messages) {
@@ -215,7 +216,8 @@ public class WhatsChatGUI extends JFrame {
     }
 
     public static void appendChat(String message) {
-        JTextArea chat = (JTextArea) frame.getContentPane().getComponent(1);
+        JTextArea chat = ((JTextArea) ((JScrollPane) frame.getContentPane().getComponent(1)).getViewport()
+                .getComponent(0));
         chat.setText(chat.getText() + message + "\n");
     }
 
