@@ -123,9 +123,8 @@ public class WhatsChatGUI extends JFrame {
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
 
-        JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane textAreaScrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        // mainPanel.add(scrollPane);
 
         JPanel sendMessagePanel = new JPanel(new GridBagLayout());
 
@@ -175,12 +174,12 @@ public class WhatsChatGUI extends JFrame {
         mainPanel.add(topItemsPanel, mainConstraints);
 
         mainConstraints.anchor = GridBagConstraints.NORTH;
-        mainConstraints.fill = GridBagConstraints.NONE;
+        mainConstraints.fill = GridBagConstraints.BOTH;
         mainConstraints.weightx = 0.9;
         mainConstraints.weighty = 0.9;
         mainConstraints.gridx = 0;
         mainConstraints.gridy = 1;
-        mainPanel.add(scrollPane, mainConstraints);
+        mainPanel.add(textAreaScrollPane, mainConstraints);
 
         mainConstraints.anchor = GridBagConstraints.NORTH;
         mainConstraints.fill = GridBagConstraints.BOTH;
