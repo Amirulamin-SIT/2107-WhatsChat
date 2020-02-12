@@ -40,15 +40,20 @@ public class MessageManager implements Runnable {
                     } else if (reqFor[0].equals("Groups")) { // Request for Group names
 
                     } else if (reqFor[0].equals("Online"))
-                        senderQueue.put("ONLINEU:" + name);
+                        if (name != null) {
+                            senderQueue.put("ONLINEU:" + name);
+                        }
+
                     break;
 
                 case "ONLINEU": // User Has come online
                     WhatsChat.ONLINE_USERS.add(leftovers);
+                    WhatsChatGUI.updateOnlineUsers();
                     break;
 
                 case "OFLINEU": // User has went offline
                     WhatsChat.ONLINE_USERS.remove(leftovers);
+                    WhatsChatGUI.updateOnlineUsers();
                     break;
 
                 case "MESSAGE": // Message recieved. Extract the IP and store into the respective group
@@ -121,7 +126,7 @@ public class MessageManager implements Runnable {
             }
             input.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
 
     }

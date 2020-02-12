@@ -34,13 +34,19 @@ public class Sender implements Runnable {
     public void run() {
         try {
             Scanner input = new Scanner(System.in);
-            addr = InetAddress.getByName("230.1.1.1");
+            String ip = IP;
+            
             Boolean running = true;
             while (running) {
                 // System.out.print("Enter Message: ");
                 // String message = input.nextLine();
                 String message = senderQueue.take();
-
+                if (message.substring(0, 7).equals("MESSAGE")) {
+                    String leftovers = message.substring(8);
+                    ip = leftovers.split("!")[0];
+                    message = message.replace((ip + "!"), "");
+                }
+                addr = InetAddress.getByName(ip);
                 System.out.println("Sent:" + message);
                 byte[] b = message.getBytes();
 

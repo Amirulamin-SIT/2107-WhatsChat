@@ -35,6 +35,8 @@ public class WhatsChat {
         activeGroupIp = IP;
         InetAddress addr = InetAddress.getByName(IP);
 
+        WhatsChatGUI wcg = new WhatsChatGUI();
+
         MulticastSocket socket = new MulticastSocket(PORT);
         socket.joinGroup(addr);
 
@@ -76,16 +78,16 @@ public class WhatsChat {
                         } else {
                             SENDER_QUEUE.put("REGISTR:" + tempName);
                             name = tempName;
+                            SENDER_QUEUE.put("REQUEST:Online");
                             ONLINE_USERS.add(name);
                             User u = new User(name);
                             users.put(name, u);
                             register.dispose();
-                            WhatsChatGUI wcg = new WhatsChatGUI();
-                            //wcg.setVisible(true);
+                            wcg.frame.setVisible(true);
                             WhatsChatGUI.updateOnlineUsers();
                             WhatsChatGUI.updateGroup();
                             WhatsChatGUI.updateChat();
-                            SENDER_QUEUE.put("MESSAGE:Hello my name is" + name);
+                            SENDER_QUEUE.put("MESSAGE:230.1.1.1!" + name + " has come online");
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();

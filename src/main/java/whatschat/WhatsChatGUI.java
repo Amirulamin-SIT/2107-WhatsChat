@@ -17,7 +17,7 @@ public class WhatsChatGUI extends JFrame {
         frame = new JFrame("ICT2103 - WhatsChat");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel mainPanel = new JPanel(new GridLayout(2, 0));
+        JPanel mainPanel = new JPanel(new GridLayout(3, 0));
 
         JPanel topItemsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -127,20 +127,59 @@ public class WhatsChatGUI extends JFrame {
         manageGroupPanel.add(leaveButton);
         topItemsPanel.add(manageGroupPanel, constraints);
 
-        JTextField textField = new JTextField();
-        textField.setEditable(false);
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        // start of updated codes
+        JPanel sendMessagePanel = new JPanel(new GridBagLayout());
+
+        JLabel sendMessageLabel = new JLabel("Message");
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        sendMessagePanel.add(sendMessageLabel, constraints);
+
+        JTextField messageTextView = new JTextField();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        sendMessagePanel.add(messageTextView, constraints);
+
+        JButton sendButton = new JButton("Send");
+        sendButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msgString = "MESSAGE:" + WhatsChat.activeGroupIp + "!" + messageTextView.getText();
+                try {
+                    WhatsChat.SENDER_QUEUE.put(msgString);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 2;
+        constraints.gridy = 0;
+        sendMessagePanel.add(sendButton, constraints);
+        // end of updated code
+
         mainPanel.add(topItemsPanel);
-        mainPanel.add(textField);
+        mainPanel.add(textArea);
+        mainPanel.add(sendMessagePanel);
+
         frame.setSize(600, 500);
         frame.setContentPane(mainPanel);
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         updateGroup();
 
     }
 
     public static void updateChat() {
-        JTextField chat = (JTextField) frame.getContentPane().getComponent(1);
+        JTextArea chat = (JTextArea) frame.getContentPane().getComponent(1);
         ArrayList<String> messages = WhatsChat.groups.get(WhatsChat.activeGroupIp).messages;
         String msgs = "";
         for (String msg : messages) {
@@ -150,7 +189,7 @@ public class WhatsChatGUI extends JFrame {
     }
 
     public static void appendChat(String message) {
-        JTextField chat = (JTextField) frame.getContentPane().getComponent(1);
+        JTextArea chat = (JTextArea) frame.getContentPane().getComponent(1);
         chat.setText(chat.getText() + message + "\n");
     }
 

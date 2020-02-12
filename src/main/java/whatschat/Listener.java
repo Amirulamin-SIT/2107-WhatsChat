@@ -78,9 +78,7 @@ public class Listener implements Runnable {
                     }
                     processingQueue.put(msg);
                     System.out.println("Recieved: " + msg);
-
                 }
-
             }
             socket.leaveGroup(addr);
             socket.close();
