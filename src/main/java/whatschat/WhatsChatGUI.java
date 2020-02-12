@@ -1,6 +1,8 @@
 package whatschat;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,13 +57,14 @@ public class WhatsChatGUI extends JFrame {
         constraints.gridy = 1;
         topItemsPanel.add(groupsList, constraints);
 
-        JPanel joinPanel = new JPanel(new GridLayout(0, 2));
+        JPanel manageGroupPanel = new JPanel(new GridLayout(5, 0));
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 1;
-        constraints.gridy = 3;
+        constraints.gridx = 2;
+        constraints.gridy = 1;
 
         JButton joinButton = new JButton("Join");
+        joinButton.setEnabled(false);
         joinButton.addActionListener(new ActionListener() {
 
             @Override
@@ -79,15 +82,6 @@ public class WhatsChatGUI extends JFrame {
 
             }
         });
-        joinPanel.add(joinButton);
-        joinPanel.add(disconnectButton);
-        topItemsPanel.add(joinPanel, constraints);
-
-        JPanel manageGroupPanel = new JPanel(new GridLayout(3, 0));
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 2;
-        constraints.gridy = 1;
         JButton newGroupButton = new JButton("New Group");
         newGroupButton.addActionListener(new ActionListener() {
 
@@ -117,6 +111,8 @@ public class WhatsChatGUI extends JFrame {
 
             }
         });
+        manageGroupPanel.add(joinButton);
+        manageGroupPanel.add(disconnectButton);
         manageGroupPanel.add(newGroupButton);
         manageGroupPanel.add(manageGroupButton);
         manageGroupPanel.add(leaveButton);
@@ -171,6 +167,12 @@ public class WhatsChatGUI extends JFrame {
         frame.setLocationRelativeTo(null);
         updateGroup();
 
+        groupsList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                joinButton.setEnabled(true);
+            }
+        });
     }
 
     public static void updateChat() {
