@@ -26,7 +26,7 @@ public class ManageGroupGUI extends JFrame  {
         constraints.gridy = 0;
         topPanel.add(onlineUsersLabel, constraints);
 
-        JLabel onlineUsersList = new JLabel();
+        JList onlineUsersList = new JList();
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
