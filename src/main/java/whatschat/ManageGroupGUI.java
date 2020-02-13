@@ -12,7 +12,8 @@ public class ManageGroupGUI extends JFrame {
         JFrame frame = new JFrame("WhatsChat - Manage Groups");
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        JPanel mainPanel = new JPanel(new GridLayout(2, 0));
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints mainConstrain = new GridBagConstraints();
 
         JPanel topPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -119,6 +120,8 @@ public class ManageGroupGUI extends JFrame {
         JLabel groupNameLabel = new JLabel("Group Name");
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.1;
         constraints.gridx = 0;
         constraints.gridy = 0;
         bottomPanel.add(groupNameLabel, constraints);
@@ -126,6 +129,8 @@ public class ManageGroupGUI extends JFrame {
         JTextField groupNameTextField = new JTextField(grpName);
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.9;
+        constraints.weighty = 0.1;
         constraints.gridx = 1;
         constraints.gridy = 0;
         bottomPanel.add(groupNameTextField, constraints);
@@ -145,12 +150,27 @@ public class ManageGroupGUI extends JFrame {
         });
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.1;
         constraints.gridx = 2;
         constraints.gridy = 0;
         bottomPanel.add(renameButton, constraints);
 
-        mainPanel.add(bottomPanel);
-        mainPanel.add(topPanel);
+        mainConstrain.anchor = GridBagConstraints.NORTHWEST;
+        mainConstrain.fill = GridBagConstraints.BOTH;
+        mainConstrain.weightx = 0.1;
+        mainConstrain.weighty = 0.1;
+        mainConstrain.gridx = 0;
+        mainConstrain.gridy = 0;
+        mainPanel.add(bottomPanel, mainConstrain);
+
+        mainConstrain.anchor = GridBagConstraints.NORTHWEST;
+        mainConstrain.fill = GridBagConstraints.BOTH;
+        mainConstrain.weightx = 0.9;
+        mainConstrain.weighty = 0.9;
+        mainConstrain.gridx = 0;
+        mainConstrain.gridy = 1;
+        mainPanel.add(topPanel, mainConstrain);
 
         frame.setSize(600, 500);
         frame.setContentPane(mainPanel);
