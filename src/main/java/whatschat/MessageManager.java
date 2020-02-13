@@ -38,7 +38,17 @@ public class MessageManager implements Runnable {
                     if (reqFor[0].equals("Users")) { // Request for User names
                         retname(WhatsChat.users.keySet());
                     } else if (reqFor[0].equals("Groups")) { // Request for Group names
+                        for (Group group : WhatsChat.groups.values()) {
+                            String groupName = group.name;
+                            String groupIp = group.ip;
 
+                            String members = "";
+                            for (String memer : group.members) {
+                                members += memer + ",";
+                            }
+                            String msg = "GRPINFO:" + groupIp + ":" + groupName + ":" + members;
+                            WhatsChat.SENDER_QUEUE.put(msg);
+                        }
                     } else if (reqFor[0].equals("Online"))
                         if (name != null) {
                             senderQueue.put("ONLINEU:" + name);
@@ -46,10 +56,23 @@ public class MessageManager implements Runnable {
 
                     break;
 
+                case "GRPINFO":
+                    String grpIp = leftovers.split(":")[0];
+                    String grpName = leftovers.split(":")[1];
+                    String[] grpmembers = leftovers.replace(grpIp + ":", "").replace(grpName + ":", "").split(",");
+                    Group infgroup = new Group(grpName, grpIp);
+                    for (String member : grpmembers) {
+                        infgroup.members.add(member);
+                    }
+                    WhatsChat.groups.put(grpIp, infgroup);
+                    WhatsChatGUI.updateGroup();
+                    break;
+
                 case "ONLINEU": // User Has come online
                     WhatsChat.ONLINE_USERS.add(leftovers);
                     WhatsChat.users.putIfAbsent(leftovers, new User(leftovers));
                     WhatsChatGUI.updateOnlineUsers();
+                    processingQueue.put("MESSAGE:230.1.1.1!" + name + " has come online");
                     break;
 
                 case "OFLINEU": // User has went offline
@@ -114,6 +137,10 @@ public class MessageManager implements Runnable {
                     String gLeft = leftovers.substring(4);
                     switch (gType) {
                     case "add": // add member
+                        if (!WhatsChat.groups.containsKey(gIp)) {
+                            WhatsChat.groups.put(gIp, new Group("", gIp));
+                            senderQueue.put("REQUEST:Groups");
+                        }
                         WhatsChat.groups.get(gIp).members.add(gLeft);
                         WhatsChatGUI.updateOnlineUsers();
                         break;
