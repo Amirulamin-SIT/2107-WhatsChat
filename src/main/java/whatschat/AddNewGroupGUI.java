@@ -112,9 +112,9 @@ public class AddNewGroupGUI extends JFrame {
                         msg += strName + ",";
                     }
                     try {
-                        Thread groupListener = new Thread(new Listener(ip, WhatsChat.PROCESSING_QUEUE));
-                        groupListener.start();
-                        WhatsChat.threads.put(ip, groupListener);
+                        //Thread groupListener = new Thread(new Listener(ip, WhatsChat.PROCESSING_QUEUE));
+                        //groupListener.start();
+                        //WhatsChat.threads.put(ip, groupListener);
 
                         WhatsChat.SENDER_QUEUE.put(msg);
                     } catch (Exception ex) {
