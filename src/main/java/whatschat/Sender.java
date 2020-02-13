@@ -26,7 +26,7 @@ public class Sender implements Runnable {
     // Logger
     Logger logger = Logger.getLogger(Listener.class.getName());
 
-    public Sender(MulticastSocket socket, LinkedBlockingQueue<String> senderQueue) {
+    public Sender(LinkedBlockingQueue<String> senderQueue) {
         //this.socket = socket;
         try {
             this.socket = new DatagramSocket();

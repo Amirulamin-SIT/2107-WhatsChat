@@ -46,7 +46,7 @@ public class WhatsChat {
         socket.bind(sockAddr);
         socket.joinGroup(addr);
 
-        Thread mainSender = new Thread(new Sender(socket, SENDER_QUEUE));
+        Thread mainSender = new Thread(new Sender(SENDER_QUEUE));
         mainSender.start();
 
         Thread mainListener = new Thread(new Listener(socket, PROCESSING_QUEUE));

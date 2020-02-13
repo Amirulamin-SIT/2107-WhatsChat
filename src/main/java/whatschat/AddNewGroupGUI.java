@@ -99,7 +99,7 @@ public class AddNewGroupGUI extends JFrame {
                         ip = generateIP();
                     } while (WhatsChat.groups.containsKey(ip));
 
-                    String msg = "REGGROP:" + grpName + ":" + generateIP() + ":";
+                    String msg = "REGGROP:" + grpName + ":" + ip + ":";
 
                     for (Object name : Arrays.asList(nameList.toArray())) {
                         String strName = (String) name;
@@ -117,7 +117,9 @@ public class AddNewGroupGUI extends JFrame {
                 } else {
                     groupNameTextField.setText("Name in Use");
                 }
+                frame.dispose();
             }
+            
         });
         addButton.addActionListener(new ActionListener() {
 

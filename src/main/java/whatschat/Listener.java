@@ -44,9 +44,9 @@ public class Listener implements Runnable {
         try {
             this.addr = InetAddress.getByName(ip);
             this.socket = new MulticastSocket(null);
-            socket.setReuseAddress(true);
+            this.socket.setReuseAddress(true);
             SocketAddress sockAddr = new InetSocketAddress(PORT);
-            socket.bind(sockAddr);
+            this.socket.bind(sockAddr);
 
             this.socket.joinGroup(addr);
         } catch (Exception e) {
