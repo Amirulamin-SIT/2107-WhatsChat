@@ -54,7 +54,7 @@ public class WhatsChatGUI extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                 	try {
-						UserProfileGUI frame1 = new UserProfileGUI();
+						UserProfileGUI frame1 = new UserProfileGUI(onlineUsersList.getSelectedValue());
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
