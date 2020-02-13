@@ -81,16 +81,17 @@ public class ManageGroupGUI extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = "GROUPMT:" + gIp + "!" + "add:" + WhatsChat.name;
                 if (onlineUsersList.getSelectedIndex() != -1) {
                     String name = onlineUsersList.getSelectedValue();
                     ((DefaultListModel<String>) onlineUsersList.getModel()).remove(onlineUsersList.getSelectedIndex());
                     ((DefaultListModel<String>) memberList.getModel()).addElement(name);
-                }
-                try {
-                    WhatsChat.SENDER_QUEUE.add(msg);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    String msg = "GROUPMT:" + gIp + "!" + "add:" + name;
+
+                    try {
+                        WhatsChat.SENDER_QUEUE.add(msg);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -98,16 +99,18 @@ public class ManageGroupGUI extends JFrame {
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = "GROUPMT:" + gIp + "!" + "rmv:" + WhatsChat.name;
+
                 if (memberList.getSelectedIndex() != -1) {
                     String name = memberList.getSelectedValue();
                     ((DefaultListModel<String>) memberList.getModel()).remove(memberList.getSelectedIndex());
                     ((DefaultListModel<String>) onlineUsersList.getModel()).addElement(name);
-                }
-                try {
-                    WhatsChat.SENDER_QUEUE.add(msg);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    String msg = "GROUPMT:" + gIp + "!" + "rmv:" + name;
+
+                    try {
+                        WhatsChat.SENDER_QUEUE.add(msg);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });

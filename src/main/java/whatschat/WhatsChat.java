@@ -86,6 +86,7 @@ public class WhatsChat {
                             SENDER_QUEUE.put("REGISTR:" + tempName);
                             name = tempName;
                             SENDER_QUEUE.put("REQUEST:Online");
+                            SENDER_QUEUE.put("REQUEST:Groups");
 
                             ONLINE_USERS.add(name);
                             groups.get(IP).members.add(name);

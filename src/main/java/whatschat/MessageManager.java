@@ -63,6 +63,9 @@ public class MessageManager implements Runnable {
                     Group infgroup = new Group(grpName, grpIp);
                     for (String member : grpmembers) {
                         infgroup.members.add(member);
+                        if (member.equals(WhatsChat.name)) {
+                            infgroup.memberOf = true;
+                        }
                     }
                     WhatsChat.groups.put(grpIp, infgroup);
                     WhatsChatGUI.updateGroup();
@@ -142,11 +145,19 @@ public class MessageManager implements Runnable {
                             senderQueue.put("REQUEST:Groups");
                         }
                         WhatsChat.groups.get(gIp).members.add(gLeft);
+                        if (gLeft.equals(WhatsChat.name)) {
+                            WhatsChat.groups.get(gIp).memberOf = true;
+                        }
                         WhatsChatGUI.updateOnlineUsers();
+                        WhatsChatGUI.updateGroup();
                         break;
                     case "rmv": // remove member
                         WhatsChat.groups.get(gIp).members.remove(gLeft);
+                        if (gLeft.equals(WhatsChat.name)) {
+                            WhatsChat.groups.get(gIp).memberOf = false;
+                        }
                         WhatsChatGUI.updateOnlineUsers();
+                        WhatsChatGUI.updateGroup();
                         break;
                     case "rnm": // rename group
                         WhatsChat.groups.get(gIp).name = gLeft;

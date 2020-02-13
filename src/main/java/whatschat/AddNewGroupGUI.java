@@ -123,10 +123,10 @@ public class AddNewGroupGUI extends JFrame {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
+                    frame.dispose();
                 } else {
                     groupNameTextField.setText("Name in Use");
                 }
-                frame.dispose();
             }
 
         });
