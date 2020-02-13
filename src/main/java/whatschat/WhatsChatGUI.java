@@ -6,6 +6,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class WhatsChatGUI extends JFrame {
@@ -46,6 +50,19 @@ public class WhatsChatGUI extends JFrame {
         constraints.weighty = 0.9;
         constraints.gridx = 0;
         constraints.gridy = 1;
+        MouseListener mouseListener = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                	try {
+						UserProfileGUI frame1 = new UserProfileGUI();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+                 }
+            }
+        };
+        onlineUsersList.addMouseListener(mouseListener);
         topItemsPanel.add(onlineUsersList, constraints);
 
         JLabel groupsLabel = new JLabel("Groups");
