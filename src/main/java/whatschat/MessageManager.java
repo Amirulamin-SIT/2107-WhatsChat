@@ -49,11 +49,29 @@ public class MessageManager implements Runnable {
                             String msg = "GRPINFO:" + groupIp + ":" + groupName + ":" + members;
                             WhatsChat.SENDER_QUEUE.put(msg);
                         }
-                    } else if (reqFor[0].equals("Online"))
+                    } else if (reqFor[0].equals("Online")) {
                         if (name != null) {
                             senderQueue.put("ONLINEU:" + name);
                         }
+                    } else if (reqFor[0].equals("GroupMsg")) {
+                        if (WhatsChat.groups.containsKey(reqFor[1])) {
+                            ArrayList<String> grpMsgs = WhatsChat.groups.get(reqFor[1]).messages;
+                            String msgs = "GROUPMG:" + reqFor[1] + ":" ;
+                            for (String string : grpMsgs) {
+                                msgs += string + ",";
+                            }
+                            senderQueue.put(msgs);
+                        }
+                    }
+                    break;
 
+                case "GROUPMG":
+                    String mgGroup = leftovers.split(":")[0];
+                    String[] mgs = leftovers.replace(mgGroup + ":", "").split(",");
+                    for (String string : mgs) {
+                        WhatsChat.groups.get(mgGroup).messages.add(string);
+                    }
+                    
                     break;
 
                 case "GRPINFO":
@@ -147,6 +165,9 @@ public class MessageManager implements Runnable {
                         WhatsChat.groups.get(gIp).members.add(gLeft);
                         if (gLeft.equals(WhatsChat.name)) {
                             WhatsChat.groups.get(gIp).memberOf = true;
+                            Thread groupListener = new Thread(new Listener(gIp, WhatsChat.PROCESSING_QUEUE));
+                            groupListener.start();
+                            WhatsChat.threads.put(gIp, groupListener);
                         }
                         WhatsChatGUI.updateOnlineUsers();
                         WhatsChatGUI.updateGroup();
@@ -155,6 +176,7 @@ public class MessageManager implements Runnable {
                         WhatsChat.groups.get(gIp).members.remove(gLeft);
                         if (gLeft.equals(WhatsChat.name)) {
                             WhatsChat.groups.get(gIp).memberOf = false;
+                            WhatsChat.threads.get(gIp).interrupt();
                         }
                         WhatsChatGUI.updateOnlineUsers();
                         WhatsChatGUI.updateGroup();
