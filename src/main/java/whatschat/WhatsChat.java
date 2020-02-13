@@ -99,7 +99,6 @@ public class WhatsChat {
                             WhatsChatGUI.updateOnlineUsers();
                             WhatsChatGUI.updateGroup();
                             WhatsChatGUI.updateChat();
-                            SENDER_QUEUE.put("MESSAGE:230.1.1.1!" + name + " has come online");
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();

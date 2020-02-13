@@ -46,32 +46,6 @@ public class ManageGroupGUI extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 0));
         JButton addButton = new JButton("->");
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String msg = "GROUPMT:" + gIp + "!" + "add:" + WhatsChat.name;
-                try {
-                    WhatsChat.SENDER_QUEUE.add(msg);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        JButton removeButton = new JButton("<-");
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String msg = "GROUPMT:" + gIp + "!" + "rmv:" + WhatsChat.name;
-                try {
-                    WhatsChat.SENDER_QUEUE.add(msg);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        buttonPanel.add(addButton);
-        buttonPanel.add(removeButton);
 
         constraints.weightx = 0.2;
         constraints.fill = GridBagConstraints.NONE;
@@ -102,6 +76,43 @@ public class ManageGroupGUI extends JFrame {
         constraints.gridx = 2;
         constraints.gridy = 1;
         topPanel.add(memberList, constraints);
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "GROUPMT:" + gIp + "!" + "add:" + WhatsChat.name;
+                if (onlineUsersList.getSelectedIndex() != -1) {
+                    String name = onlineUsersList.getSelectedValue();
+                    ((DefaultListModel<String>) onlineUsersList.getModel()).remove(onlineUsersList.getSelectedIndex());
+                    ((DefaultListModel<String>) memberList.getModel()).addElement(name);
+                }
+                try {
+                    WhatsChat.SENDER_QUEUE.add(msg);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        JButton removeButton = new JButton("<-");
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "GROUPMT:" + gIp + "!" + "rmv:" + WhatsChat.name;
+                if (memberList.getSelectedIndex() != -1) {
+                    String name = memberList.getSelectedValue();
+                    ((DefaultListModel<String>) memberList.getModel()).remove(memberList.getSelectedIndex());
+                    ((DefaultListModel<String>) onlineUsersList.getModel()).addElement(name);
+                }
+                try {
+                    WhatsChat.SENDER_QUEUE.add(msg);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        buttonPanel.add(addButton);
+        buttonPanel.add(removeButton);
 
         JPanel bottomPanel = new JPanel(new GridBagLayout());
 
