@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class UserProfileGUI extends JFrame {
-    public UserProfileGUI() throws IOException {
+    public UserProfileGUI(String username) throws IOException {
         JFrame frame = new JFrame("WhatsChat - User Profile");
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
@@ -46,7 +46,7 @@ public class UserProfileGUI extends JFrame {
         constraints.gridy = 0;
         topPanel.add(userNameTextLabel, constraints);
         
-        JLabel userNameLabel = new JLabel("MY NAME");
+        JLabel userNameLabel = new JLabel(username);
         constraints.weighty =1;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.NONE;
@@ -67,7 +67,7 @@ public class UserProfileGUI extends JFrame {
         userDescription.setLineWrap(true);
         constraints.gridx = 0;
         constraints.gridy = 1;
-        userDescription.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+        userDescription.setText("Hi, my name is " +  username);
         bottomPanel.add(userDescription, constraints);
         
         mainPanel.add(topPanel);

@@ -20,11 +20,12 @@ public class AddNewGroupGUI extends JFrame {
         JPanel topPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.weightx = 1;
+        constraints.weighty = 1;
 
         JLabel onlineUsersLabel = new JLabel("Online Users");
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.NONE;
-        constraints.weighty = 0.1;
         constraints.weighty = 0.1;
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -34,7 +35,6 @@ public class AddNewGroupGUI extends JFrame {
         for (String name : WhatsChat.ONLINE_USERS) {
             ((DefaultListModel<String>) onlineUsersList.getModel()).addElement(name);
         }
-        constraints.weightx = 0.1;
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -49,16 +49,14 @@ public class AddNewGroupGUI extends JFrame {
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
         constraints.fill = GridBagConstraints.NONE;
-        constraints.weightx = 0.9;
-        constraints.weighty = 0.1;
+        constraints.weightx = 0.2;
         constraints.gridx = 1;
         constraints.gridy = 1;
         topPanel.add(buttonPanel, constraints);
         constraints.weightx = 1;
 
         JLabel memberLabel = new JLabel("Member");
-        constraints.weightx = 0.1;
-        constraints.weighty = 0.9;
+        constraints.weighty = 0.1;
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.NONE;
         constraints.gridx = 2;
@@ -66,8 +64,7 @@ public class AddNewGroupGUI extends JFrame {
         topPanel.add(memberLabel, constraints);
 
         JList<String> memberList = new JList<String>(new DefaultListModel<String>());
-        constraints.weightx = 0.9;
-        constraints.weighty = 0.1;
+        constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 2;
@@ -179,7 +176,7 @@ public class AddNewGroupGUI extends JFrame {
         mainConstrain.gridy = 1;
         mainPanel.add(bottomPanel, mainConstrain);
 
-        frame.setSize(500, 200);
+        frame.setSize(600, 500);
         frame.setContentPane(mainPanel);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
