@@ -56,7 +56,7 @@ public class MessageManager implements Runnable {
                     } else if (reqFor[0].equals("GroupMsg")) {
                         if (WhatsChat.groups.containsKey(reqFor[1])) {
                             ArrayList<String> grpMsgs = WhatsChat.groups.get(reqFor[1]).messages;
-                            String msgs = "GROUPMG:" + reqFor[1] + ":" ;
+                            String msgs = "GROUPMG:" + reqFor[1] + ":";
                             for (String string : grpMsgs) {
                                 msgs += string + ",";
                             }
@@ -71,7 +71,7 @@ public class MessageManager implements Runnable {
                     for (String string : mgs) {
                         WhatsChat.groups.get(mgGroup).messages.add(string);
                     }
-                    
+
                     break;
 
                 case "GRPINFO":
@@ -145,6 +145,9 @@ public class MessageManager implements Runnable {
                     group.setUsers(memers);
                     if (memers.contains(WhatsChat.name)) {
                         group.memberOf = true;
+                        Thread groupListener = new Thread(new Listener(groupIp, WhatsChat.PROCESSING_QUEUE));
+                        groupListener.start();
+                        WhatsChat.threads.put(groupIp, groupListener);
 
                     }
                     WhatsChat.groups.putIfAbsent(groupIp, group);
@@ -177,6 +180,7 @@ public class MessageManager implements Runnable {
                         if (gLeft.equals(WhatsChat.name)) {
                             WhatsChat.groups.get(gIp).memberOf = false;
                             WhatsChat.threads.get(gIp).interrupt();
+                            WhatsChat.threads.remove(gIp);
                         }
                         WhatsChatGUI.updateOnlineUsers();
                         WhatsChatGUI.updateGroup();
