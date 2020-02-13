@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Random;
 
 public class AddNewGroupGUI extends JFrame {
     public AddNewGroupGUI() {
@@ -26,7 +28,10 @@ public class AddNewGroupGUI extends JFrame {
         constraints.gridy = 0;
         topPanel.add(onlineUsersLabel, constraints);
 
-        JList onlineUsersList = new JList();
+        JList<String> onlineUsersList = new JList<String>(new DefaultListModel<String>());
+        for (String name : WhatsChat.ONLINE_USERS) {
+            ((DefaultListModel<String>) onlineUsersList.getModel()).addElement(name);
+        }
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -36,23 +41,7 @@ public class AddNewGroupGUI extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 0));
         JButton addButton = new JButton("->");
-        addButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-        });
         JButton removeButton = new JButton("<-");
-        removeButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-        });
 
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
@@ -72,7 +61,7 @@ public class AddNewGroupGUI extends JFrame {
         constraints.gridy = 0;
         topPanel.add(memberLabel, constraints);
 
-        JList memberList = new JList();
+        JList<String> memberList = new JList<String>(new DefaultListModel<String>());
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -101,10 +90,60 @@ public class AddNewGroupGUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
+                DefaultListModel<String> nameList = (DefaultListModel<String>) memberList.getModel();
+                String ip;
+                String grpName = groupNameTextField.getText();
+                if (!isNameInUse(grpName)) {
+
+                    do {
+                        ip = generateIP();
+                    } while (WhatsChat.groups.containsKey(ip));
+
+                    String msg = "REGGROP:" + grpName + ":" + generateIP() + ":";
+
+                    for (Object name : Arrays.asList(nameList.toArray())) {
+                        String strName = (String) name;
+                        msg += strName + ",";
+                    }
+                    try {
+                        Thread groupListener = new Thread(new Listener(ip, WhatsChat.PROCESSING_QUEUE));
+                        groupListener.start();
+                        WhatsChat.threads.put(ip, groupListener);
+
+                        WhatsChat.SENDER_QUEUE.put(msg);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    groupNameTextField.setText("Name in Use");
+                }
+            }
+        });
+        addButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (onlineUsersList.getSelectedIndex() != -1) {
+                    String name = onlineUsersList.getSelectedValue();
+                    ((DefaultListModel<String>) onlineUsersList.getModel()).remove(onlineUsersList.getSelectedIndex());
+                    ((DefaultListModel<String>) memberList.getModel()).addElement(name);
+                }
 
             }
         });
+
+        removeButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (memberList.getSelectedIndex() != -1) {
+                    String name = memberList.getSelectedValue();
+                    ((DefaultListModel<String>) memberList.getModel()).remove(memberList.getSelectedIndex());
+                    ((DefaultListModel<String>) onlineUsersList.getModel()).addElement(name);
+                }
+            }
+        });
+
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 2;
@@ -118,5 +157,23 @@ public class AddNewGroupGUI extends JFrame {
         frame.setContentPane(mainPanel);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private static String generateIP() {
+        Random rand = new Random();
+        int x = rand.nextInt(254) + 2;
+        int y = rand.nextInt(254) + 2;
+        String ip = "230.1." + Integer.toString(x) + "." + Integer.toString(y);
+        return ip;
+    }
+
+    private static boolean isNameInUse(String name) {
+        boolean inUse = false;
+        for (Group group : WhatsChat.groups.values()) {
+            if (name.equals(group.name)) {
+                inUse = true;
+            }
+        }
+        return inUse;
     }
 }

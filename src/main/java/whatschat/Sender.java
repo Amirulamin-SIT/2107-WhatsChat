@@ -2,6 +2,7 @@ package whatschat;
 
 import java.util.Scanner;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.MulticastSocket;
 import java.net.InetAddress;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -18,7 +19,7 @@ public class Sender implements Runnable {
     static final String IP = "230.1.1.1";
 
     private LinkedBlockingQueue<String> senderQueue;
-    private MulticastSocket socket;
+    private DatagramSocket socket;
     private InetAddress addr;
     private int port = PORT;
 
@@ -26,7 +27,13 @@ public class Sender implements Runnable {
     Logger logger = Logger.getLogger(Listener.class.getName());
 
     public Sender(MulticastSocket socket, LinkedBlockingQueue<String> senderQueue) {
-        this.socket = socket;
+        //this.socket = socket;
+        try {
+            this.socket = new DatagramSocket();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         this.senderQueue = senderQueue;
     }
 

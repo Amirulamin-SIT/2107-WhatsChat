@@ -2,8 +2,9 @@ package whatschat;
 
 import java.io.IOException;
 import java.net.MulticastSocket;
+import java.net.SocketAddress;
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.net.InetSocketAddress;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Hashtable;
 import java.util.HashSet;
@@ -25,19 +26,24 @@ public class WhatsChat {
     public static final Hashtable<String, Group> groups = new Hashtable<String, Group>(); // <IP, Group>
     public static String name;
     public static String activeGroupIp;
+    public static Hashtable<String, Thread> threads = new Hashtable<String, Thread>();
 
     public static void main(String[] args) throws IOException {
         // TODO: Do the data insertion stuff here
         if (!groups.containsKey("230.1.1.1")) {
-            groups.put("230.1.1.1", new Group("All", "230.1.1.1"));
+            groups.putIfAbsent("230.1.1.1", new Group("All", "230.1.1.1"));
 
         }
+        groups.get("230.1.1.1").memberOf = true;
         activeGroupIp = IP;
         InetAddress addr = InetAddress.getByName(IP);
 
         WhatsChatGUI wcg = new WhatsChatGUI();
 
-        MulticastSocket socket = new MulticastSocket(PORT);
+        MulticastSocket socket = new MulticastSocket(null);
+        socket.setReuseAddress(true);
+        SocketAddress sockAddr = new InetSocketAddress(PORT);
+        socket.bind(sockAddr);
         socket.joinGroup(addr);
 
         Thread mainSender = new Thread(new Sender(socket, SENDER_QUEUE));
@@ -45,6 +51,7 @@ public class WhatsChat {
 
         Thread mainListener = new Thread(new Listener(socket, PROCESSING_QUEUE));
         mainListener.start();
+        threads.put(IP, mainListener);
 
         MessageManager msgManager = new MessageManager(PROCESSING_QUEUE, SENDER_QUEUE, name);
         Thread messageManager = new Thread(msgManager);
@@ -79,11 +86,16 @@ public class WhatsChat {
                             SENDER_QUEUE.put("REGISTR:" + tempName);
                             name = tempName;
                             SENDER_QUEUE.put("REQUEST:Online");
+
                             ONLINE_USERS.add(name);
+                            groups.get(IP).members.add(name);
+
                             User u = new User(name);
-                            users.put(name, u);
+                            users.putIfAbsent(name, u);
+
                             register.dispose();
                             wcg.frame.setVisible(true);
+
                             WhatsChatGUI.updateOnlineUsers();
                             WhatsChatGUI.updateGroup();
                             WhatsChatGUI.updateChat();

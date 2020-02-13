@@ -15,6 +15,7 @@ public class RegisterGUI {
     public static JFrame register()
     {
         JFrame frame = new JFrame("WhatsChat - Enter Username");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,200);
         frame.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();

@@ -48,6 +48,7 @@ public class MessageManager implements Runnable {
 
                 case "ONLINEU": // User Has come online
                     WhatsChat.ONLINE_USERS.add(leftovers);
+                    WhatsChat.users.putIfAbsent(leftovers, new User(leftovers));
                     WhatsChatGUI.updateOnlineUsers();
                     break;
 
@@ -68,7 +69,8 @@ public class MessageManager implements Runnable {
                 // ===== USER REGISTRATION =====
                 case "REGISTR": // Registration of user
                     // TODO: Add options for description
-                    WhatsChat.users.put(leftovers, new User(leftovers));
+                    WhatsChat.users.putIfAbsent(leftovers, new User(leftovers));
+                    WhatsChat.groups.get("230.1.1.1").members.add(leftovers);
                     WhatsChat.ONLINE_USERS.add(leftovers);
                     WhatsChatGUI.updateOnlineUsers();
                     break;
@@ -76,7 +78,10 @@ public class MessageManager implements Runnable {
                 case "RETNAME": // List of names from network
                     String[] names = leftovers.split(",");
                     for (String name : names) {
-                        WhatsChat.users.put(name, new User(name));
+                        WhatsChat.ONLINE_USERS.add(name);
+                        WhatsChat.users.putIfAbsent(name, new User(name));
+                        WhatsChat.groups.get("230.1.1.1").members.add(name);
+                        WhatsChatGUI.updateOnlineUsers();
                     }
                     break;
 
@@ -91,18 +96,18 @@ public class MessageManager implements Runnable {
                     String groupIp = leftovers.split(":")[1];
                     Group group = new Group(groupName, groupIp);
 
-                    String[] members = leftovers.replace(groupName + ":", "").replace(groupName + ":", "").split(",");
+                    String[] members = leftovers.replace(groupName + ":", "").replace(groupIp + ":", "").split(",");
                     ArrayList<String> memers = new ArrayList<String>(Arrays.asList(members));
                     group.setUsers(memers);
                     if (memers.contains(WhatsChat.name)) {
                         group.memberOf = true;
 
                     }
-                    WhatsChat.groups.put(groupIp, group);
+                    WhatsChat.groups.putIfAbsent(groupIp, group);
                     WhatsChatGUI.updateGroup();
                     break;
 
-                case "GROUP":
+                case "GROUPMT": // Group Matters
                     String gIp = leftovers.split("!")[0];
                     leftovers = leftovers.replace(gIp + "!", "");
                     String gType = leftovers.substring(0, 3);
@@ -110,12 +115,15 @@ public class MessageManager implements Runnable {
                     switch (gType) {
                     case "add": // add member
                         WhatsChat.groups.get(gIp).members.add(gLeft);
+                        WhatsChatGUI.updateOnlineUsers();
                         break;
                     case "rmv": // remove member
                         WhatsChat.groups.get(gIp).members.remove(gLeft);
+                        WhatsChatGUI.updateOnlineUsers();
                         break;
                     case "rnm": // rename group
                         WhatsChat.groups.get(gIp).name = gLeft;
+                        WhatsChatGUI.updateGroup();
                         break;
                     default:
                         break;

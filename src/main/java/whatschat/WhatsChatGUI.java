@@ -39,7 +39,7 @@ public class WhatsChatGUI extends JFrame {
         constraints.gridy = 0;
         topItemsPanel.add(onlineUsersLabel, constraints);
 
-        JList onlineUsersList = new JList(onlineUserListModel);
+        JList<String> onlineUsersList = new JList<String>(onlineUserListModel);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 0.1;
@@ -57,7 +57,7 @@ public class WhatsChatGUI extends JFrame {
         constraints.gridy = 0;
         topItemsPanel.add(groupsLabel, constraints);
 
-        JList groupsList = new JList(groupsListModel);
+        JList<String> groupsList = new JList<String>(groupsListModel);
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 0.1;
@@ -80,7 +80,14 @@ public class WhatsChatGUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
+                if (groupsList.getSelectedIndex() != -1) {
+                    String name = groupsList.getSelectedValue();
+                    name = name.replace("    <<Active>>", "");
+                    WhatsChat.activeGroupIp = getIpFromGroupName(name);
+                    updateGroup();
+                    updateChat();
+                    updateOnlineUsers();
+                }
 
             }
         });
@@ -89,29 +96,47 @@ public class WhatsChatGUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 AddNewGroupGUI newgrp = new AddNewGroupGUI();
-                newgrp.setVisible(true);
+                // newgrp.setVisible(true);
             }
         });
         JButton manageGroupButton = new JButton("Manage Group");
+        manageGroupButton.setEnabled(false);
         manageGroupButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                ManageGroupGUI mnggrp = new ManageGroupGUI();
-                mnggrp.setVisible(true);
+                if (groupsList.getSelectedIndex() != -1) {
+                    String name = groupsList.getSelectedValue();
+                    name = name.replace("    <<Active>>", "");
+                    ManageGroupGUI mnggrp = new ManageGroupGUI(getIpFromGroupName(name));
+                }
+                // mnggrp.setVisible(true);
             }
         });
         JButton leaveButton = new JButton("Leave");
         leaveButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
+                if (groupsList.getSelectedIndex() != -1) {
+                    String name = groupsList.getSelectedValue();
+                    String ip = getIpFromGroupName(name);
+                    WhatsChat.activeGroupIp = "230.1.1.1";
+                    try {
+                        WhatsChat.SENDER_QUEUE.put("GROUP:" + ip + "!" + name);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    WhatsChat.groups.remove(ip);
+
+                    updateGroup();
+                    updateChat();
+                    updateOnlineUsers();
+                }
 
             }
+
         });
         manageGroupPanel.add(joinButton);
         manageGroupPanel.add(newGroupButton);
@@ -150,7 +175,8 @@ public class WhatsChatGUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msgString = "MESSAGE:" + WhatsChat.activeGroupIp + "!" + messageTextView.getText();
+                String msgString = "MESSAGE:" + WhatsChat.activeGroupIp + "!" + WhatsChat.name + ": "
+                        + messageTextView.getText();
                 try {
                     WhatsChat.SENDER_QUEUE.put(msgString);
                 } catch (Exception ex) {
@@ -200,7 +226,19 @@ public class WhatsChatGUI extends JFrame {
         groupsList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                joinButton.setEnabled(true);
+                if (groupsList.getSelectedValue() != null) {
+                    if (groupsList.getSelectedValue().replace("    <<Active>>", "").equals("All")) {
+                        manageGroupButton.setEnabled(false);
+                    } else {
+                        manageGroupButton.setEnabled(true);
+                    }
+
+                    if (groupsList.getSelectedValue().contains("    <<Active>>")) {
+                        joinButton.setEnabled(false);
+                    } else {
+                        joinButton.setEnabled(true);
+                    }
+                }
             }
         });
     }
@@ -223,16 +261,35 @@ public class WhatsChatGUI extends JFrame {
     }
 
     public static void updateOnlineUsers() {
+        Group activeGroup = WhatsChat.groups.get(WhatsChat.activeGroupIp);
         onlineUserListModel.clear();
         for (String user : WhatsChat.ONLINE_USERS) {
-            onlineUserListModel.addElement(user);
+            if (activeGroup.members.contains(user)) {
+                onlineUserListModel.addElement(user);
+            }
         }
     }
 
     public static void updateGroup() {
         groupsListModel.clear();
         for (Group group : WhatsChat.groups.values()) {
-            groupsListModel.addElement(group.name);
+            String grpName = group.name;
+            if (grpName.equals(WhatsChat.groups.get(WhatsChat.activeGroupIp).name)) {
+                grpName += "    <<Active>>";
+            }
+            if (group.memberOf == true) {
+                groupsListModel.addElement(grpName);
+            }
+
         }
+    }
+
+    public static String getIpFromGroupName(String grpName) {
+        for (Group group : WhatsChat.groups.values()) {
+            if (grpName.equals(group.name)) {
+                return group.ip;
+            }
+        }
+        return null;
     }
 }

@@ -5,8 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ManageGroupGUI extends JFrame  {
-    public ManageGroupGUI() {
+public class ManageGroupGUI extends JFrame {
+    public ManageGroupGUI(String gIp) {
+        String grpName = WhatsChat.groups.get(gIp).name;
+        Group grp = WhatsChat.groups.get(gIp);
         JFrame frame = new JFrame("WhatsChat - Manage Groups");
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
@@ -26,7 +28,15 @@ public class ManageGroupGUI extends JFrame  {
         constraints.gridy = 0;
         topPanel.add(onlineUsersLabel, constraints);
 
-        JList onlineUsersList = new JList();
+        JList<String> onlineUsersList = new JList<String>(new DefaultListModel<String>());
+        DefaultListModel<String> onlineModel = (DefaultListModel<String>) onlineUsersList.getModel();
+
+        for (String user : WhatsChat.ONLINE_USERS) {
+            // If online user not contained in grp.members then put to Online Users
+            if (!grp.members.contains(user)) {
+                onlineModel.addElement(user);
+            }
+        }
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -37,22 +47,28 @@ public class ManageGroupGUI extends JFrame  {
         JPanel buttonPanel = new JPanel(new GridLayout(2, 0));
         JButton addButton = new JButton("->");
         addButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "GROUPMT:" + gIp + "!" + "add:" + WhatsChat.name;
+                try {
+                    WhatsChat.SENDER_QUEUE.add(msg);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         JButton removeButton = new JButton("<-");
         removeButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "GROUPMT:" + gIp + "!" + "rmv:" + WhatsChat.name;
+                try {
+                    WhatsChat.SENDER_QUEUE.add(msg);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
@@ -72,7 +88,14 @@ public class ManageGroupGUI extends JFrame  {
         constraints.gridy = 0;
         topPanel.add(memberLabel, constraints);
 
-        JList memberList = new JList();
+        JList<String> memberList = new JList<String>(new DefaultListModel<String>());
+        DefaultListModel<String> memberModel = (DefaultListModel<String>) memberList.getModel();
+        for (String user : WhatsChat.ONLINE_USERS) {
+            // If online user not contained in grp.members then put to Online Users
+            if (grp.members.contains(user) && !user.equals(WhatsChat.name)) {
+                memberModel.addElement(user);
+            }
+        }
         constraints.weighty = 0.9;
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -89,7 +112,7 @@ public class ManageGroupGUI extends JFrame  {
         constraints.gridy = 0;
         bottomPanel.add(groupNameLabel, constraints);
 
-        JTextField groupNameTextField = new JTextField();
+        JTextField groupNameTextField = new JTextField(grpName);
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 1;
@@ -98,13 +121,17 @@ public class ManageGroupGUI extends JFrame  {
 
         JButton renameButton = new JButton("Rename");
         renameButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    WhatsChat.SENDER_QUEUE.put("GROUPMT:" + gIp + "!" + "rnm:" + groupNameTextField.getText());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        });
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 2;

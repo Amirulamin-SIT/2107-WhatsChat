@@ -1,6 +1,8 @@
 package whatschat;
 
 import java.net.InetAddress;
+import java.net.SocketAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.DatagramPacket;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -41,8 +43,12 @@ public class Listener implements Runnable {
     public Listener(String ip, LinkedBlockingQueue<String> processingQueue) {
         try {
             this.addr = InetAddress.getByName(ip);
-            this.socket = new MulticastSocket(PORT);
-            socket.joinGroup(addr);
+            this.socket = new MulticastSocket(null);
+            socket.setReuseAddress(true);
+            SocketAddress sockAddr = new InetSocketAddress(PORT);
+            socket.bind(sockAddr);
+
+            this.socket.joinGroup(addr);
         } catch (Exception e) {
             logger.log(Level.INFO, e.toString());
             logger.log(Level.INFO, e.getMessage());
