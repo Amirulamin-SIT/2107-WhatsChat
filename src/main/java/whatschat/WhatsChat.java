@@ -214,7 +214,7 @@ public class WhatsChat {
     static void shutdown() {
         try {
             SENDER_QUEUE.put("OFLINEU:" + name);
-            if (!leftall) {
+            if (name != null && !leftall) {
                 ObjectMapper mapper = new ObjectMapper();
 
                 String groupString = mapper.writeValueAsString(groups);
@@ -230,6 +230,13 @@ public class WhatsChat {
                 FileOutputStream nameFile = new FileOutputStream("name.json");
                 nameFile.write(name.getBytes());
                 nameFile.close();
+            } else {
+                File usersFile = new File("users.json");
+                usersFile.delete();
+                File groupsFile = new File("groups.json");
+                groupsFile.delete();
+                File nameFile = new File("name.json");
+                nameFile.delete();
             }
 
         } catch (Exception e) {
