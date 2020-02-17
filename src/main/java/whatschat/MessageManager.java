@@ -69,14 +69,18 @@ public class MessageManager implements Runnable {
                     String mgGroup = leftovers.split(":")[0];
                     String[] mgs = leftovers.replace(mgGroup + ":", "").split(",");
                     for (String string : mgs) {
-                        WhatsChat.groups.get(mgGroup).messages.add(string);
+                        if (!WhatsChat.groups.get(mgGroup).messages.contains(string)) {
+                            WhatsChat.groups.get(mgGroup).messages.add(string);
+                        }
                     }
 
                     break;
 
                 // ===== USER =====
                 case "ONLINEU": // User Has come online
-                    WhatsChat.ONLINE_USERS.add(leftovers);
+                    if (!WhatsChat.ONLINE_USERS.contains(leftovers)) {
+                        WhatsChat.ONLINE_USERS.add(leftovers);
+                    }
                     WhatsChat.users.putIfAbsent(leftovers, new User(leftovers));
                     WhatsChatGUI.updateOnlineUsers();
                     processingQueue.put("MESSAGE:230.1.1.1!" + name + " has come online");
@@ -147,7 +151,7 @@ public class MessageManager implements Runnable {
                         groupListener.start();
                         WhatsChat.threads.put(groupIp, groupListener);
                     }
-                    senderQueue.put("REQUEST:GroupMsg:groupIp");
+                    senderQueue.put("REQUEST:GroupMsg:" + groupIp);
 
                     WhatsChat.groups.putIfAbsent(groupIp, group);
                     WhatsChatGUI.updateGroup();
@@ -195,16 +199,22 @@ public class MessageManager implements Runnable {
                             groupListener.start();
                             WhatsChat.threads.put(gIp, groupListener);
                         }
-                        senderQueue.put("REQUEST:GroupMsg:groupIp");
+                        senderQueue.put("REQUEST:GroupMsg:" + gIp);
                         WhatsChatGUI.updateOnlineUsers();
                         WhatsChatGUI.updateGroup();
                         break;
                     case "rmv": // remove member
                         WhatsChat.groups.get(gIp).members.remove(gLeft);
                         if (gLeft.equals(WhatsChat.name)) {
-                            WhatsChat.groups.get(gIp).memberOf = false;
-                            WhatsChat.threads.get(gIp).interrupt();
-                            WhatsChat.threads.remove(gIp);
+                            try {
+                                WhatsChat.groups.get(gIp).memberOf = false;
+                                WhatsChat.threads.get(gIp).interrupt();
+                                WhatsChat.threads.remove(gIp);
+                                System.out.println(gIp);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                         }
                         if (gIp.equals(WhatsChat.activeGroupIp)) {
                             WhatsChat.activeGroupIp = "230.1.1.1";

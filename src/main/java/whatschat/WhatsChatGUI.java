@@ -53,13 +53,13 @@ public class WhatsChatGUI extends JFrame {
         MouseListener mouseListener = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                	try {
-						UserProfileGUI frame1 = new UserProfileGUI(onlineUsersList.getSelectedValue());
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-                 }
+                    try {
+                        UserProfileGUI frame1 = new UserProfileGUI(onlineUsersList.getSelectedValue());
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                }
             }
         };
         onlineUsersList.addMouseListener(mouseListener);
@@ -137,26 +137,28 @@ public class WhatsChatGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (groupsList.getSelectedIndex() != -1) {
                     String name = groupsList.getSelectedValue();
-                    String ip = getIpFromGroupName(name);
-                    
+                    String ip = getIpFromGroupName(name.replace("    <<Active>>", ""));
+
                     try {
                         if (!ip.equals("230.1.1.1")) {
-                        WhatsChat.SENDER_QUEUE.put("GROUPMT:" + ip + "!rmv" + name);
-                        }
-                        else 
-                        {
-                            WhatsChat.SENDER_QUEUE.put("LEAVEAL:" + name);
+                            WhatsChat.SENDER_QUEUE.put("GROUPMT:" + ip + "!rmv" + name);
+                            WhatsChat.groups.remove(ip);
+                            WhatsChat.activeGroupIp = "230.1.1.1";
+                            updateGroup();
+                            updateChat();
+                            updateOnlineUsers();
+
+                        } else {
+                            WhatsChat.SENDER_QUEUE.put("LEAVEAL:" + WhatsChat.name);
                             WhatsChat.leftall = true;
+                            WhatsChat.shutdown();
+                            frame.dispose();
+                            System.exit(0);
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
 
-                    WhatsChat.groups.remove(ip);
-                    WhatsChat.activeGroupIp = "230.1.1.1";
-                    updateGroup();
-                    updateChat();
-                    updateOnlineUsers();
                 }
 
             }

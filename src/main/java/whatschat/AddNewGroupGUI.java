@@ -106,15 +106,24 @@ public class AddNewGroupGUI extends JFrame {
                     } while (WhatsChat.groups.containsKey(ip));
 
                     String msg = "REGGROP:" + grpName + ":" + ip + ":";
+                    Group grp = new Group(grpName, ip);
 
                     for (Object name : Arrays.asList(nameList.toArray())) {
                         String strName = (String) name;
                         msg += strName + ",";
+                        grp.members.add(strName);
+                        if(strName.equals(WhatsChat.name))
+                        {
+                            grp.memberOf = true;
+                        }
                     }
+                    WhatsChat.groups.put(ip, grp);
+                    WhatsChatGUI.updateGroup();
                     try {
-                        //Thread groupListener = new Thread(new Listener(ip, WhatsChat.PROCESSING_QUEUE));
-                        //groupListener.start();
-                        //WhatsChat.threads.put(ip, groupListener);
+                        // Thread groupListener = new Thread(new Listener(ip,
+                        // WhatsChat.PROCESSING_QUEUE));
+                        // groupListener.start();
+                        // WhatsChat.threads.put(ip, groupListener);
 
                         WhatsChat.SENDER_QUEUE.put(msg);
                     } catch (Exception ex) {
