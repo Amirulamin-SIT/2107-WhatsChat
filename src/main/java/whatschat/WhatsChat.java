@@ -1,6 +1,7 @@
 package whatschat;
 
 import java.io.IOException;
+import java.io.*;
 import java.net.MulticastSocket;
 import java.net.SocketAddress;
 import java.net.InetAddress;
@@ -27,6 +28,7 @@ public class WhatsChat {
     public static String name;
     public static String activeGroupIp;
     public static Hashtable<String, Thread> threads = new Hashtable<String, Thread>();
+    public static boolean leftall = false;
 
     public static void main(String[] args) throws IOException {
         // TODO: Do the data insertion stuff here
@@ -56,6 +58,20 @@ public class WhatsChat {
         MessageManager msgManager = new MessageManager(PROCESSING_QUEUE, SENDER_QUEUE, name);
         Thread messageManager = new Thread(msgManager);
         messageManager.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+
+            public void run() {
+                try {
+                    FileOutputStream out = new FileOutputStream("groups.json");
+                    out.write("ayaya".getBytes());
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }));
 
         try {
             SENDER_QUEUE.put("REQUEST:Users");

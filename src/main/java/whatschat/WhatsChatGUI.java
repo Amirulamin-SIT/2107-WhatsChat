@@ -138,15 +138,22 @@ public class WhatsChatGUI extends JFrame {
                 if (groupsList.getSelectedIndex() != -1) {
                     String name = groupsList.getSelectedValue();
                     String ip = getIpFromGroupName(name);
-                    WhatsChat.activeGroupIp = "230.1.1.1";
+                    
                     try {
-                        WhatsChat.SENDER_QUEUE.put("GROUP:" + ip + "!" + name);
+                        if (!ip.equals("230.1.1.1")) {
+                        WhatsChat.SENDER_QUEUE.put("GROUPMT:" + ip + "!rmv" + name);
+                        }
+                        else 
+                        {
+                            WhatsChat.SENDER_QUEUE.put("LEAVEAL:" + name);
+                            WhatsChat.leftall = true;
+                        }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
 
                     WhatsChat.groups.remove(ip);
-
+                    WhatsChat.activeGroupIp = "230.1.1.1";
                     updateGroup();
                     updateChat();
                     updateOnlineUsers();
